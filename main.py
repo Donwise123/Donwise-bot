@@ -22,7 +22,8 @@ target_channel = 'https://t.me/+LWjMM6W7LtdjOTM0'
 keywords = ['buy', 'sell', 'tp', 'sl', 'xauusd', 'gold', 'nas100', 'eurusd', 'gbpusd']
 signature = "\n\nForwarded by @RealDonwise 🔥 | Donwise Copytrade Vault"
 
-client
+acdfe825ab951d9e10b1ac93632e0fdc
+1BJWap1wBu1Qn2Io7Yvo_v5ryaKXGr0qZ6bpIM9kyBZSgJy11CKo54fhq1IjhtWJQJOw_GXtaqIfYOS8R771do8RYbCO40_ap7LY3PmqqDRrjPdfzg_5vSBx9w-24KygqKRdpBPJKUnrkwM8VI5ai9muYILetpjE0o-YVPKJEMqy30tcQOut2ratfei6VAsvzu9R0tSduVHBzliMlm1QYbNaIOTtZZ9IZ_OvirrwsGssWEg6UnYTlaY6ZofsuUXucETz2guleXwDMVDzbifocoUHf4LTRnjRkjteKMmnQxG0PXhxe2c4fhRRFjg6feWBf0pODFgHJzCTynufEseKq_i2VWNBRO-g=
 @client.on(events.NewMessage(chats=source_channels))
 async def forward_signal(event):
     text = event.raw_text.lower()
