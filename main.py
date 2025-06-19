@@ -22,8 +22,7 @@ target_channel = 'https://t.me/+LWjMM6W7LtdjOTM0'
 keywords = ['buy', 'sell', 'tp', 'sl', 'xauusd', 'gold', 'nas100', 'eurusd', 'gbpusd']
 signature = "\n\nForwarded by @RealDonwise 🔥 | Donwise Copytrade Vault"
 
-client = TelegramClient(session_name, api_id, api_hash)
-
+client
 @client.on(events.NewMessage(chats=source_channels))
 async def forward_signal(event):
     text = event.raw_text.lower()
