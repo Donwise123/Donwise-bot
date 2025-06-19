@@ -1,12 +1,17 @@
-
-from telethon import TelegramClient, events
+from telethon.sync import TelegramClient, events
+from telethon.sessions import StringSession
 import os
 from keep_alive import keep_alive
 
+# Load API credentials from environment variables
 api_id = int(os.environ['API_ID'])
 api_hash = os.environ['API_HASH']
-session_name = 'donwise_session'
+session_string = os.environ['SESSION_STRING']
 
+# Create the Telegram client using StringSession
+client = TelegramClient(StringSession(session_string), api_id, api_hash)
+
+# List of signal source groups or channels
 source_channels = [
     'https://t.me/firepipsignals',
     'https://t.me/Forex_Top_Premium_Signals',
@@ -17,13 +22,16 @@ source_channels = [
     'https://t.me/kojoforextrades'
 ]
 
+# Your private target channel
 target_channel = 'https://t.me/+LWjMM6W7LtdjOTM0'
 
+# Keywords to filter signal messages
 keywords = ['buy', 'sell', 'tp', 'sl', 'xauusd', 'gold', 'nas100', 'eurusd', 'gbpusd']
+
+# Signature to be added to each forwarded message
 signature = "\n\nForwarded by @RealDonwise 🔥 | Donwise Copytrade Vault"
 
-acdfe825ab951d9e10b1ac93632e0fdc
-1BJWap1wBu1Qn2Io7Yvo_v5ryaKXGr0qZ6bpIM9kyBZSgJy11CKo54fhq1IjhtWJQJOw_GXtaqIfYOS8R771do8RYbCO40_ap7LY3PmqqDRrjPdfzg_5vSBx9w-24KygqKRdpBPJKUnrkwM8VI5ai9muYILetpjE0o-YVPKJEMqy30tcQOut2ratfei6VAsvzu9R0tSduVHBzliMlm1QYbNaIOTtZZ9IZ_OvirrwsGssWEg6UnYTlaY6ZofsuUXucETz2guleXwDMVDzbifocoUHf4LTRnjRkjteKMmnQxG0PXhxe2c4fhRRFjg6feWBf0pODFgHJzCTynufEseKq_i2VWNBRO-g=
+# Auto-forwarding logic
 @client.on(events.NewMessage(chats=source_channels))
 async def forward_signal(event):
     text = event.raw_text.lower()
@@ -34,6 +42,7 @@ async def forward_signal(event):
             await client.send_message(target_channel, event.message.message + signature)
         print("✅ Signal Forwarded")
 
+# Keep the web app alive + start the bot
 keep_alive()
 client.start()
 client.run_until_disconnected()
