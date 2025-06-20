@@ -1,6 +1,7 @@
 from telethon.sync import TelegramClient, events
 from telethon.sessions import StringSession
 import os
+import re
 from keep_alive import keep_alive
 
 # Load API credentials from environment variables
@@ -8,10 +9,10 @@ api_id = int(os.environ['API_ID'])
 api_hash = os.environ['API_HASH']
 session_string = os.environ['SESSION_STRING']
 
-# Create the Telegram client using StringSession
+# Create the Telegram client
 client = TelegramClient(StringSession(session_string), api_id, api_hash)
 
-# List of signal source groups or channels
+# Source signal groups/channels
 source_channels = [
     'https://t.me/firepipsignals',
     'https://t.me/Forex_Top_Premium_Signals',
@@ -25,24 +26,52 @@ source_channels = [
 # Your private target channel
 target_channel = 'https://t.me/+LWjMM6W7LtdjOTM0'
 
-# Keywords to filter signal messages
+# Legit trading keywords to allow
 keywords = ['buy', 'sell', 'tp', 'sl', 'xauusd', 'gold', 'nas100', 'eurusd', 'gbpusd']
 
-# Signature to be added to each forwarded message
+# Spam filtering setup
+BLOCKED_KEYWORDS = [
+    "successful investment payout",
+    "successfully paid",
+    "congratulations to all our investors",
+    "invest & earn"
+]
+
+SPAM_LINKS_RE = re.compile(
+    r"(tronscan\.org|blockchain\.com|amounts\s*.*?)",
+    re.IGNORECASE
+)
+
+def is_spam(text):
+    text = text.lower()
+    if any(bad in text for bad in BLOCKED_KEYWORDS):
+        return True
+    if SPAM_LINKS_RE.search(text):
+        return True
+    return False
+
+# Signature added to forwarded messages
 signature = "\n\nForwarded by @RealDonwise 🔥 | Donwise Copytrade Vault"
 
-# Auto-forwarding logic
+# Main forwarding logic
 @client.on(events.NewMessage(chats=source_channels))
 async def forward_signal(event):
-    text = event.raw_text.lower()
-    if any(k in text for k in keywords):
+    text = event.raw_text or ""
+
+    # Check for spam
+    if is_spam(text):
+        print("🚫 Blocked spam:", text[:80])
+        return
+
+    # Check for legit signal keywords
+    if any(k in text.lower() for k in keywords):
         if event.message.media:
             await client.send_file(target_channel, event.message.media, caption=(event.message.message or "") + signature)
         else:
             await client.send_message(target_channel, event.message.message + signature)
         print("✅ Signal Forwarded")
 
-# Keep the web app alive + start the bot
+# Keep bot alive + start
 keep_alive()
 client.start()
 client.run_until_disconnected()
