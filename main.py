@@ -51,7 +51,7 @@ def is_spam(text):
     return False
 
 # Signature added to forwarded messages
-signature = "\n\nForwarded by @RealDonwise 🔥 | Donwise Copytrade Vault"
+signature = "\n\nBy @RealDonwise 🔥 | Donwise Copytrade Vault"
 
 # Main forwarding logic
 @client.on(events.NewMessage(chats=source_channels))
